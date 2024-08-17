@@ -37,10 +37,18 @@
     <div id="new-buttons"></div>
 </div>
 <div>
-    <form id = "fakeForm">
+    <form id="fakeForm">
         <div id="fake"></div>
     </form>
-    <form>
+    <form id="myForm">
+        <div><label>Random number of text fields to make fetching data more difficult.</label>
+        <div id="random-textboxes"></div></div>
+        <label for="name">Name:</label>
+        <input type="text" id="name" name="name" /><br/>
+
+        <label for="lastName">Last Name:</label>
+        <input type="text" id="lastName" name="lastName" /><br/>
+
         <h3>Dropdown List</h3>
         <select id="dropdown">
             <option value="" disabled="disabled" selected="selected">Please select an option</option>
@@ -50,14 +58,31 @@
         </select>
         <br/>
 
-        <input type="checkbox"> checkbox 1<br/>
+        <input type="checkbox" id="checkbox1">
+        <label for="checkbox1">Checkbox 1</label><br/>
+
         <label for="checkbox2" style="display: none;" id="labelCheckbox2">
-            <input id="checkbox2" type="checkbox" checked> checkbox 2 that appears after 1 second
+            <input id="checkbox2" type="checkbox" checked> Checkbox 2 (appears after 1 second)
         </label><br/>
 
+        <label for="checkbox3">
+            <input id="checkbox3" type="checkbox" checked> Checkbox 3
+        </label><br/>
+
+        <h4>Flag of France is:</h4>
         <label>
-            <input type="checkbox" checked> checkbox 3
+            <input type="radio" name="radioOption" value="b"> Blue
+        </label><br/>
+        <label>
+            <input type="radio" name="radioOption" value="w"> White
+        </label><br/>
+        <label>
+            <input type="radio" name="radioOption" value="r"> Red
         </label>
+
+        <br/>
+        <button type="button" id="submitBtn">Submit</button>
+        <button type="button" id="clearBtn">Clear</button>
     </form>
 </div>
 </body>

@@ -10,6 +10,12 @@ document.addEventListener("DOMContentLoaded", function() {
         checkbox2.style.display = 'block'; // to occupy a whole line
     }, 1000);
 
+    const randomTextboxes = document.getElementById('random-textboxes');
+    const max = Math.floor(Math.random() * (11 - 2)) + 2;
+    for (var i = 0; i < max; i++){
+        randomTextboxes.innerHTML += '<input type="text" style="width: 20px;"/>'
+    }
+
     const dropdown = document.getElementById('dropdown');
     const checkboxes = document.querySelectorAll('input[type="checkbox"]'); // Select all checkboxes in the form
 
@@ -26,15 +32,29 @@ document.addEventListener("DOMContentLoaded", function() {
             });
         }
     });
+
+  document.getElementById('submitBtn').addEventListener('click', function() {
+        const name = document.getElementById('name').value;
+        const lastName = document.getElementById('lastName').value;
+        const selectedRadio = document.querySelector('input[name="radioOption"]:checked');
+
+        let flag = selectedRadio ? selectedRadio.value : 'No flag selected';
+
+        const params = new URLSearchParams({
+            name: name,
+            lastName: lastName,
+            flag: flag
+        });
+
+        window.location.href = `filled.html?${params.toString()}`;
+    });
 });
 
-// Function to add buttons dynamically
 function addButton() {
     var div = document.getElementById('new-buttons');
     div.innerHTML += '<button onclick="removeButton(this)">Remove me</button>';
 }
 
-// Function to remove the button when clicked
 function removeButton(button) {
     button.parentNode.removeChild(button);
 }
