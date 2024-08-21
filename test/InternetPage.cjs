@@ -20,7 +20,7 @@ class InternetPage {
         return await this.addButton.innerText();
     }
 
-    async addButtons(count) {
+    async clickAddButton(count) {
         for (let i = 0; i < count; i++) {
             await this.addButton.click();
         }

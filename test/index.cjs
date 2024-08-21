@@ -36,13 +36,10 @@ app.get('/the-internet-add-remove', async (req, res) => {
     const addButtonText = await internetPage.getAddButtonText();
     console.log('Fetched inner text from the button: ' + addButtonText);
     
-    // Add 7 buttons
-    await internetPage.addButtons(7);
+    await internetPage.clickAddButton(7);
 
-    // Take a screenshot
     await internetPage.takeScreenshot('screenshots/the-internet.AddButton.png');
     
-    // Count and click "Remove Me" buttons
     let removeMeButtonCount = await internetPage.getRemoveMeButtonCount();
     console.log('"Remove Me" buttons that appeared: ' + removeMeButtonCount);
     
@@ -51,7 +48,7 @@ app.get('/the-internet-add-remove', async (req, res) => {
     removeMeButtonCount = await internetPage.getRemoveMeButtonCount();
     console.log('Now the number of "Remove Me" buttons is: ' + removeMeButtonCount);
     
-    await new Promise(resolve => setTimeout(resolve, 3500)); // Wait for 3.5 seconds
+    await new Promise(resolve => setTimeout(resolve, 3500));
     await browser.close();
     
     res.send(`Title: ${title}, Add Button Text: ${addButtonText}, "Remove Me" buttons that appeared: ${removeMeButtonCount}`);
