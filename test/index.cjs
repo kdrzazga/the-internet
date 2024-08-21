@@ -1,6 +1,7 @@
 const express = require('express');
-const { chromium } = require('playwright');
 const { wait } = require('./lib.cjs');
+const InternetPage = require('./InternetPage.cjs');
+const { chromium } = require('playwright');
 
 const app = express();
 const PORT = Number(process.env.PORT) || 3000;
@@ -21,41 +22,38 @@ app.get('/', (req, res) => {
     `);
 });
 
+
 app.get('/the-internet-add-remove', async (req, res) => {
-    browser = await chromium.launch({ headless: false, slowMo: 100 });
+    const browser = await chromium.launch({ headless: false, slowMo: 100 });
     const context = await browser.newContext();
     const page = await context.newPage();
+    
+    const internetPage = new InternetPage(page);
+    
+    await internetPage.navigate('http://localhost:8080');
+    const title = await internetPage.getTitle();
+    
+    const addButtonText = await internetPage.getAddButtonText();
+    console.log('Fetched inner text from the button: ' + addButtonText);
+    
+    // Add 7 buttons
+    await internetPage.addButtons(7);
 
-    await page.goto('http://localhost:8080');
-    const title = await page.title();
-
-    const addButton = await page.locator('text="Add button"');
-    const addButtonText = await addButton.innerText();
-	console.log('Fetched inner text from the button: ' + addButtonText);
-	
-	for (let i = 0; i <7; i++){
-		addButton.click();
-	}
-	
-	await page.screenshot({
-        path: 'screenshots/the-internet.AddButton.png',
-        fullPage: true
-    });
-	
-	let removeMeButtons = await page.locator('text="Remove me"');
-	let removeMeButtonCount = await removeMeButtons.count();
-	console.log('"Remove Me" buttons that appeared: ' + removeMeButtonCount);
-	
-	for (let i = removeMeButtonCount - 1; i>=0; i--){
-		await removeMeButtons.nth(i).click();
-	}
-	
-	removeMeButtons = await page.locator('text="Remove me"');
-	removeMeButtonCount = await removeMeButtons.count();
-	console.log('Now the number of "Remove Me" buttons is: ' + removeMeButtonCount);
-	
-    await wait(3500);
+    // Take a screenshot
+    await internetPage.takeScreenshot('screenshots/the-internet.AddButton.png');
+    
+    // Count and click "Remove Me" buttons
+    let removeMeButtonCount = await internetPage.getRemoveMeButtonCount();
+    console.log('"Remove Me" buttons that appeared: ' + removeMeButtonCount);
+    
+    await internetPage.clickRemoveMeButtons();
+    
+    removeMeButtonCount = await internetPage.getRemoveMeButtonCount();
+    console.log('Now the number of "Remove Me" buttons is: ' + removeMeButtonCount);
+    
+    await new Promise(resolve => setTimeout(resolve, 3500)); // Wait for 3.5 seconds
     await browser.close();
+    
     res.send(`Title: ${title}, Add Button Text: ${addButtonText}, "Remove Me" buttons that appeared: ${removeMeButtonCount}`);
 });
 
