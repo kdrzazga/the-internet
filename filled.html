@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filled Information</title>
+</head>
+<body>
+<h1>Submitted Information</h1>
+<textarea id="info" rows="10" cols="30"></textarea>
+
+<script>
+    // Function to get query parameters from the URL
+    function getQueryParams() {
+        const params = new URLSearchParams(window.location.search);
+        const name = params.get('name') || 'No name provided';
+        const lastName = params.get('lastName') || 'No last name provided';
+        const flag = params.get('flag') || 'No flag selected';
+
+        return { name, lastName, flag };
+    }
+
+    // Fill the textarea with information
+    function fillTextarea() {
+        const { name, lastName, flag } = getQueryParams();
+        const info = `Name: ${name}\nLast Name: ${lastName}\nFlag: ${flag}`;
+        document.getElementById('info').value = info;
+    }
+
+    // Execute the function to fill the textarea when the page loads
+    fillTextarea();
+</script>
+</body>
+</html>
