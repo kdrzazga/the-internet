@@ -42,9 +42,21 @@ app.get('/the-internet-add-remove', async (req, res) => {
         fullPage: true
     });
 	
+	let removeMeButtons = await page.locator('text="Remove me"');
+	let removeMeButtonCount = await removeMeButtons.count();
+	console.log('"Remove Me" buttons that appeared: ' + removeMeButtonCount);
+	
+	for (let i = removeMeButtonCount - 1; i>=0; i--){
+		await removeMeButtons.nth(i).click();
+	}
+	
+	removeMeButtons = await page.locator('text="Remove me"');
+	removeMeButtonCount = await removeMeButtons.count();
+	console.log('Now the number of "Remove Me" buttons is: ' + removeMeButtonCount);
+	
     await wait(3500);
     await browser.close();
-    res.send(`Title: ${title}, Add Button Text: ${addButtonText}`);
+    res.send(`Title: ${title}, Add Button Text: ${addButtonText}, "Remove Me" buttons that appeared: ${removeMeButtonCount}`);
 });
 
 app.listen(PORT, () => {
