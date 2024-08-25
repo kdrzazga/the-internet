@@ -2,14 +2,15 @@
 const { expect } = require('@playwright/test');
 
 class InternetPage {
-    constructor(page) {
+    constructor(page, url) {
         this.page = page;
+		this.url = url;
         this.addButton = this.page.locator('text="Add button"');
         this.removeMeButtons = this.page.locator('text="Remove me"');
     }
 
-    async navigate(url) {
-        await this.page.goto(url);
+    async navigate() {
+        await this.page.goto(this.url);
     }
 
     async getTitle() {
