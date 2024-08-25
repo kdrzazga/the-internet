@@ -28,9 +28,9 @@ app.get('/the-internet-add-remove', async (req, res) => {
     const context = await browser.newContext();
     const page = await context.newPage();
     
-    const internetPage = new InternetPage(page);
+    const internetPage = new InternetPage(page, 'http://localhost:8080');
     
-    await internetPage.navigate('http://localhost:8080');
+    await internetPage.navigate();
     const title = await internetPage.getTitle();
     
     const addButtonText = await internetPage.getAddButtonText();
