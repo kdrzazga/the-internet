@@ -18,6 +18,7 @@ app.get('/', (req, res) => {
             <p><a href='http://localhost:8080/'>Open website</a></p>
             <p><a href='http://localhost:3000/the-internet-add-remove'>Add/Remove button tests</a></p>
             <p><a href='http://localhost:3000/checkboxes'>Checkboxes tests</a></p>
+            <p><a href='http://localhost:3000/radios'>Radio buttons tests</a></p>
         </body>
         </html>
     `);
@@ -63,14 +64,42 @@ app.get('/checkboxes', async (req, res) => {
     const internetPage = new InternetPage(page, 'http://localhost:8080');
     
     await internetPage.navigate();
-	
+	await new Promise(resolve => setTimeout(resolve, 1500));
 	const checkboxesCount = await internetPage.getCheckboxesCount();
-	const checkboxText = await internetPage.clickCheckbox(1);
+	await internetPage.takeScreenshot('screenshots/the-internet.checkbox.before.png');
+	await internetPage.clickCheckbox(1);
+	await internetPage.takeScreenshot('screenshots/the-internet.checkbox.after.png');
+	
+	let statuses = await internetPage.getCheckboxStatuses();
 	
     await new Promise(resolve => setTimeout(resolve, 3500));
     await browser.close();
     
-    res.send(`checkboxes: ${checkboxesCount}<br/>Clicked checkbox: ${checkboxText}`);
+    res.send(`checkboxes: ${checkboxesCount}<br/>Checkboxes: ${statuses}`);
+});
+
+app.get('/radios', async (req, res) => {
+    const browser = await chromium.launch({ headless: false, slowMo: 100 });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    
+    const internetPage = new InternetPage(page, 'http://localhost:8080');
+    
+    await internetPage.navigate();
+	
+	const colors = ['white', 'blue', 'red'];
+
+	for (const color of colors) {
+		await internetPage.clickRadioButton(color);
+		await internetPage.takeScreenshot(`screenshots/the-internet.radio.${color}.png`);
+	}
+	
+	let statuses = await internetPage.getRadioButtonsStatuses();
+	
+    await new Promise(resolve => setTimeout(resolve, 3500));
+    await browser.close();
+    
+    res.send(`Status of Radio buttons: ${statuses}`);
 });
 
 app.listen(PORT, () => {
