@@ -37,6 +37,50 @@ class InternetPage {
             await this.removeMeButtons.nth(i).click();
         }
     }
+	
+	async getCheckboxesCount(){
+		let checkboxes = await this.page.$$("input[type='checkbox']");
+		let cnt = checkboxes.length;
+		console.log(`Found ${cnt} checkboxes.`);
+		return cnt;
+	}
+	
+	async getCheckboxText(index){
+		if (this.#validateCheckboxIndex(index)){
+			return;
+		}
+				
+		let checkboxes = await this.page.$$("input[type='checkbox']");
+		let chkbox = await checkboxes[index];
+		
+		const parentHandle = await chkbox.evaluateHandle(el => el.parentElement);
+		const chkboxText = await this.page.evaluate(el => el.innerText, parentHandle);
+		return chkboxText;
+	}
+	
+	async clickCheckbox(index){		
+		if (!this.#validateCheckboxIndex(index)){
+			return;
+		}
+		
+		let checkboxes = await this.page.$$("input[type='checkbox']");
+		let chkbox = await checkboxes[index];
+		
+		await chkbox.click();
+		const chkboxText = await this.getCheckboxText(index);
+		console.log(`Clicked checkbox ${chkboxText}.`);
+		return chkboxText;
+	}
+	
+	async #validateCheckboxIndex(index){
+		const chkboxCnt = await this.getCheckboxesCount();
+		if (index >= chkboxCnt){
+			console.error(`Wrong index. There are only ${chkboxCnt} checkboxes.`);
+			return false;
+		}
+		
+		return true;
+	}
 
     async takeScreenshot(path) {
         await this.page.screenshot({ path, fullPage: false });

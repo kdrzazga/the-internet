@@ -17,6 +17,7 @@ app.get('/', (req, res) => {
         <body>
             <p><a href='http://localhost:8080/'>Open website</a></p>
             <p><a href='http://localhost:3000/the-internet-add-remove'>Add/Remove button tests</a></p>
+            <p><a href='http://localhost:3000/checkboxes'>Checkboxes tests</a></p>
         </body>
         </html>
     `);
@@ -52,6 +53,24 @@ app.get('/the-internet-add-remove', async (req, res) => {
     await browser.close();
     
     res.send(`Title: ${title}, Add Button Text: ${addButtonText}, "Remove Me" buttons that appeared: ${removeMeButtonCount}`);
+});
+
+app.get('/checkboxes', async (req, res) => {
+    const browser = await chromium.launch({ headless: false, slowMo: 100 });
+    const context = await browser.newContext();
+    const page = await context.newPage();
+    
+    const internetPage = new InternetPage(page, 'http://localhost:8080');
+    
+    await internetPage.navigate();
+	
+	const checkboxesCount = await internetPage.getCheckboxesCount();
+	const checkboxText = await internetPage.clickCheckbox(1);
+	
+    await new Promise(resolve => setTimeout(resolve, 3500));
+    await browser.close();
+    
+    res.send(`checkboxes: ${checkboxesCount}<br/>Clicked checkbox: ${checkboxText}`);
 });
 
 app.listen(PORT, () => {
